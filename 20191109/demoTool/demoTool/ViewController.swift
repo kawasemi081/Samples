@@ -93,11 +93,10 @@ func copyFile(filenames: [String], atPath: String, toPath: String, csvPath: Stri
 //                print("⭐️: \(error)")
 //            }
 //        }
-        
-        
-    } catch {
-        print("⭐️: \(error)")
-    }
+//
+//    } catch {
+//        print("⭐️: \(error)")
+//    }
     print("⭐️Copy is Done⭐️")
 
 }
@@ -121,7 +120,7 @@ class DraggableView: NSView {
         
         guard let urls = pboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], let csvPath = urls.first?.path else { return false }
         csvFileUrl = csvPath
-        
+        print(csvPath)
         return true
     }
     
