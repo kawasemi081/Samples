@@ -45,6 +45,7 @@ func savePanel(csvLines: [String], atPath: String, filenames: [String]) {
     let savePanel = NSSavePanel()
     savePanel.canCreateDirectories = false
     savePanel.showsTagField = false
+    savePanel.message = "保存先フォルダを入力"
     savePanel.begin { (result) -> Void in
         guard result.rawValue == NSApplication.ModalResponse.OK.rawValue, let toPath = savePanel.url else { return }
         let savePath = toPath.path
@@ -57,32 +58,32 @@ func savePanel(csvLines: [String], atPath: String, filenames: [String]) {
 func openPanel(csvLines: [String]) {
     /// - Note: macOSアプリ開発入門にある `runModal()`はplaygroundのこの書き方だと使えなかった → ツールを清書するならちゃんとMacAppProject作る方が ⭕️
     let openPanel = NSOpenPanel()
-    openPanel.allowsMultipleSelection = true // 複数ファイルの選択を許すか
     openPanel.canChooseDirectories = true // ディレクトリを選択できるか
     openPanel.canCreateDirectories = false // ディレクトリを作成できるか
-    openPanel.canChooseFiles = true // ファイルを選択できるか
-    /// - Note: ファイル種別はmacOSアプリ開発入門にある下記の指定方法とどちらが良いかとか、usecaseが自分の中では曖昧。。//NSImage.imageTypes
-    ///  `["jpg", "jpeg", "JPG", "JPEG", "png", "PNG", "tiff", "TIFF", "tif", "TIF"]`
-    /// - SeeAlso: https://developer.apple.com/documentation/appkit/nsimage/1519988-imagetypes
-    openPanel.allowedFileTypes = NSImage.imageTypes // 選択できるファイル種別
-
+    openPanel.canChooseFiles = false // ファイルを選択できるか
+    openPanel.message = "分類するフォルダを選択"
     openPanel.begin { (result) -> Void in
-        guard result.rawValue == NSApplication.ModalResponse.OK.rawValue, let directoryURL = openPanel.directoryURL else { return }
-        let filenames = openPanel.urls.compactMap { $0.lastPathComponent }
-
-        savePanel(csvLines: csvLines, atPath: directoryURL.path, filenames: filenames)
+        guard result.rawValue == NSApplication.ModalResponse.OK.rawValue, let directoryURL = openPanel.url else { return }
+        do {
+            let contents = try FileManager.default.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
+            contents.contains(directoryURL)
+            let filenames = contents.compactMap { $0.lastPathComponent }
+            savePanel(csvLines: csvLines, atPath: directoryURL.path, filenames: filenames)
+        } catch {
+            print(error)
+        }
     }
 }
 
 do {
     /// ToDo: 任意の場所からDrag&Dropする
-    let csvString = try String(contentsOfFile: "/Users/midori/workspace/MacSingleView.playground/Resources/demo.csv", encoding: String.Encoding.utf8)
+    let csvString = try String(contentsOfFile: "/Users/midori/workspace/Samples/20191108/MacSingleView.playground/Resources/demo.csv", encoding: String.Encoding.utf8)
     let csvLines = csvString.components(separatedBy: .newlines)
     /// - Note: csvにタイトル有るなら必要
     //    csvLines.removeFirst()
 
     /// - Note: 下書き用なのでとりあえず保存先Dirを選択するのがわかるようにNSSavePanelを利用
-    /// サンドボックスより外のフォルダ階層を指定することをミニマムにしたいと思ったら、Finderを出してユーザーが選択しないとセキュリティ的にダメ だとPDF読んで学んだ
+    ///サンドボックスより外のフォルダ階層を指定することをミニマムにしたいと思ったら、Finderを出してユーザーが選択しないとセキュリティ的にダメ だとPDF読んで学んだ
     openPanel(csvLines: csvLines)
 } catch {
     print(error)
