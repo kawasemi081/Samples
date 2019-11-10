@@ -7,48 +7,37 @@
 //
 
 import Cocoa
-/// - Note: `Library not loaded: @rpath/libswiftCreateML.dylib` エラーになる
-//import CreateML
-import AppKit
 
 class ViewController: NSViewController {
 
     @IBOutlet weak var openDirectoryButton: NSButton!
     @IBOutlet weak var saveDirectoryButton: NSButton!
+    @IBOutlet weak var sortFileButton: NSButton!
     @IBOutlet weak var draggableView: DraggableView!
     
-    private var filenames: [String] = []
-    private var atPath: String = ""
-    private var toPath: String = ""
+    @IBOutlet weak var openDirectoryPath: NSTextField!
+    @IBOutlet weak var saveDirectoryPath: NSTextField!
+    
+    private var atPath: URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
+        
+        draggableView.wantsLayer = true
+        draggableView.layer?.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     }
 
     @IBAction func tappedOpenDirectoryButton(_ sender: Any) {
         let openPanel = NSOpenPanel()
-           openPanel.canChooseDirectories = true
-           openPanel.canCreateDirectories = false
-           openPanel.canChooseFiles = false
-           openPanel.message = "分類するフォルダを選択"
-           openPanel.begin { (result) -> Void in
-               guard result.rawValue == NSApplication.ModalResponse.OK.rawValue, let directoryURL = openPanel.url else { return }
-               do {
-                   let contents = try FileManager.default.contentsOfDirectory(at: directoryURL, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
-                    self.atPath = directoryURL.path
-                    self.filenames = contents.compactMap { $0.lastPathComponent }
-               } catch {
-                   print(error)
-               }
-           }
+        openPanel.canChooseDirectories = true
+        openPanel.canCreateDirectories = false
+        openPanel.canChooseFiles = false
+        openPanel.message = "分類するフォルダを選択"
+        openPanel.begin { (result) -> Void in
+            guard result.rawValue == NSApplication.ModalResponse.OK.rawValue, let directoryURL = openPanel.url else { return }
+            self.atPath = directoryURL
+            self.openDirectoryPath.stringValue = directoryURL.path
+        }
     }
     
     @IBAction func tappedSaveDirectoryButton(_ sender: Any) {
@@ -58,71 +47,53 @@ class ViewController: NSViewController {
         savePanel.message = "保存先フォルダを入力"
         savePanel.begin { (result) -> Void in
             guard result.rawValue == NSApplication.ModalResponse.OK.rawValue, let toPath = savePanel.url else { return }
-            self.toPath = toPath.path
-            
-            copyFile(filenames: self.filenames, atPath: self.atPath, toPath: self.toPath, csvPath: self.draggableView.csvFileUrl)
+    
+            self.saveDirectoryPath.stringValue = toPath.path
         }
     }
-}
-
-
-func copyFile(filenames: [String], atPath: String, toPath: String, csvPath: String) {
-    let fileManager = FileManager.default
-    let csvURL = URL(fileURLWithPath: csvPath)
-    /// - Note: このOSSを使う方が良い？　　https://github.com/yaslab/CSV.swift
-//    do {
-//        /// 大量のデータを読み込むのが問題なのであれば、MLDataTable使えば楽なのかもなと試してみる
-//        var parsingOptions = MLDataTable.ParsingOptions()
-//        parsingOptions.skipRows = 0
-//        parsingOptions.containsHeader = false
-//        parsingOptions.delimiter = ","
-//        parsingOptions.lineTerminator = "\n"
-//        let dataTable = try MLDataTable(contentsOf: csvURL, options: parsingOptions)
-//
-//        dataTable.rows.forEach {
-//            let csvLine = $0.values.compactMap { $0.stringValue }
-//            do {
-//                let savePath = "\(toPath)/\(csvLine[1])"
-//                let url = URL(fileURLWithPath: savePath)
-//                try fileManager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
-//
-//                let fromPath = "\(atPath)/\(csvLine[0])"
-//                let toPath = "\(savePath)/\(csvLine[0])"
-//                try fileManager.copyItem(atPath: fromPath, toPath: toPath)
-//            } catch  {
-//                print("⭐️: \(error)")
-//            }
-//        }
-//
-//    } catch {
-//        print("⭐️: \(error)")
-//    }
-    print("⭐️Copy is Done⭐️")
-
-}
-
-class DraggableView: NSView {
-
-    public var csvFileUrl: String = ""
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        registerForDraggedTypes([.fileURL])
-    }
     
-    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        return NSDragOperation.copy
-    }
-    
-    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        // 画像をドラッグ＆ドロップで読み込む例
-        let pboard = sender.draggingPasteboard
+    @IBAction func sortFiles(_ sender: Any) {
+        guard !draggableView.csvFilePath.isEmpty, let atPath = self.atPath, !saveDirectoryPath.stringValue.isEmpty else { return }
         
-        guard let urls = pboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], let csvPath = urls.first?.path else { return false }
-        csvFileUrl = csvPath
-        print(csvPath)
-        return true
+        do {
+            let csvString = try String(contentsOfFile: draggableView.csvFilePath, encoding: String.Encoding.utf8)
+            let csvLines = csvString.components(separatedBy: .newlines)
+
+            sort(csvLines: csvLines, atPath: atPath, toPath: saveDirectoryPath.stringValue)
+        } catch {
+            print(error)
+        }
+
     }
-    
-    
+}
+
+let fileManager = FileManager.default
+private func sort(csvLines: [String], atPath: URL, toPath: String) {
+    do {
+        let contents = try fileManager.contentsOfDirectory(at: atPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
+        
+        csvLines.compactMap { $0.components(separatedBy: ",") }
+            .forEach { items in
+                guard !items[0].isEmpty && !items[1].isEmpty,
+                    let url = contents.first(where: { $0.lastPathComponent == items[0] }) else { return }
+                
+                let savePath = toPath + "/" + String(items[1])
+                let toPath = URL(fileURLWithPath: savePath)
+                copyItem(atPath: url, directoryUrl: toPath)
+        }
+
+    } catch  {
+        print("⭐️: \(error)")
+    }
+}
+
+private func copyItem(atPath: URL, directoryUrl: URL) {
+    do {
+        try fileManager.createDirectory(at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
+
+        let toPath = directoryUrl.path + "/" + atPath.lastPathComponent
+        try fileManager.copyItem(atPath: atPath.path, toPath: toPath)
+    } catch  {
+        print("⭐️: \(error)")
+    }
 }

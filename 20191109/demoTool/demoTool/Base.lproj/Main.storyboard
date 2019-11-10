@@ -716,7 +716,7 @@
                                 </constraints>
                             </customView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AKf-5Z-H5B">
-                                <rect key="frame" x="307" y="166" width="136" height="19"/>
+                                <rect key="frame" x="307" y="210" width="136" height="19"/>
                                 <buttonCell key="cell" type="roundRect" title="分類するフォルダを選択" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cpU-7O-gbd">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label" size="12"/>
@@ -725,8 +725,16 @@
                                     <action selector="tappedOpenDirectoryButton:" target="XfG-lQ-9wD" id="Jeq-Tw-vhH"/>
                                 </connections>
                             </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="y1l-8H-jKo">
+                                <rect key="frame" x="20" y="237" width="224" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="⬇️csvファイルをドロップしてください" id="mJu-xH-eR0">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fl4-wZ-EBn">
-                                <rect key="frame" x="307" y="62" width="136" height="19"/>
+                                <rect key="frame" x="307" y="109" width="136" height="19"/>
                                 <buttonCell key="cell" type="roundRect" title="保存先フォルダを入力" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gLX-LE-Vnp">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="label" size="12"/>
@@ -735,39 +743,74 @@
                                     <action selector="tappedSaveDirectoryButton:" target="XfG-lQ-9wD" id="iRA-Dh-08J"/>
                                 </connections>
                             </button>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="y1l-8H-jKo">
-                                <rect key="frame" x="20" y="237" width="205" height="16"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="csvファイルをドロップしてください" id="mJu-xH-eR0">
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="wGA-ax-PdW">
+                                <rect key="frame" x="307" y="167" width="172" height="36"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" placeholderString="選択してください" drawsBackground="YES" id="OYu-4K-GC2">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="quaternaryLabelColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7ph-JN-ID9">
+                                <rect key="frame" x="307" y="66" width="172" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="T8X-qq-sPH"/>
+                                </constraints>
+                                <textFieldCell key="cell" lineBreakMode="clipping" placeholderString="選択してください" drawsBackground="YES" id="noB-N7-Tjx">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="quaternaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ALD-hz-bTO">
+                                <rect key="frame" x="445" y="29" width="32" height="19"/>
+                                <buttonCell key="cell" type="roundRect" title="OK" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Sx3-lI-thG">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="label" size="12"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="sortFiles:" target="XfG-lQ-9wD" id="IUK-2D-NrZ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="wGA-ax-PdW" secondAttribute="trailing" constant="18" id="1L1-CL-Hrb"/>
+                            <constraint firstItem="ALD-hz-bTO" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="I6s-UG-Ojq" secondAttribute="trailing" constant="8" symbolic="YES" id="4BU-cb-xiN"/>
                             <constraint firstItem="I6s-UG-Ojq" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="4ZL-j1-iZt"/>
                             <constraint firstItem="AKf-5Z-H5B" firstAttribute="leading" secondItem="fl4-wZ-EBn" secondAttribute="leading" id="5w8-Am-TMS"/>
+                            <constraint firstAttribute="trailing" secondItem="ALD-hz-bTO" secondAttribute="trailing" constant="20" symbolic="YES" id="6Zd-Q2-2Jb"/>
                             <constraint firstItem="y1l-8H-jKo" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="17" id="8yc-WB-SLq"/>
+                            <constraint firstItem="fl4-wZ-EBn" firstAttribute="top" secondItem="wGA-ax-PdW" secondAttribute="bottom" constant="39" id="B3w-PR-R6g"/>
+                            <constraint firstItem="ALD-hz-bTO" firstAttribute="top" secondItem="7ph-JN-ID9" secondAttribute="bottom" constant="18" id="Icb-eq-aQC"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="y1l-8H-jKo" secondAttribute="trailing" constant="20" symbolic="YES" id="LDe-Js-adW"/>
+                            <constraint firstItem="wGA-ax-PdW" firstAttribute="leading" secondItem="7ph-JN-ID9" secondAttribute="leading" id="Mni-Eb-FDU"/>
                             <constraint firstItem="AKf-5Z-H5B" firstAttribute="leading" secondItem="I6s-UG-Ojq" secondAttribute="trailing" constant="45" id="UVk-Yp-Xfk"/>
+                            <constraint firstItem="wGA-ax-PdW" firstAttribute="trailing" secondItem="7ph-JN-ID9" secondAttribute="trailing" id="avb-Uy-4GL"/>
                             <constraint firstItem="AKf-5Z-H5B" firstAttribute="trailing" secondItem="fl4-wZ-EBn" secondAttribute="trailing" id="bdj-o3-Gq4"/>
+                            <constraint firstItem="wGA-ax-PdW" firstAttribute="top" secondItem="AKf-5Z-H5B" secondAttribute="bottom" constant="8" symbolic="YES" id="dri-jl-9dO"/>
                             <constraint firstAttribute="trailing" secondItem="AKf-5Z-H5B" secondAttribute="trailing" constant="54" id="ipd-Vf-r5D"/>
                             <constraint firstAttribute="bottom" secondItem="I6s-UG-Ojq" secondAttribute="bottom" constant="30" id="jnF-YH-7he"/>
+                            <constraint firstItem="wGA-ax-PdW" firstAttribute="leading" secondItem="AKf-5Z-H5B" secondAttribute="leading" id="lMa-PG-Is4"/>
                             <constraint firstItem="I6s-UG-Ojq" firstAttribute="top" secondItem="y1l-8H-jKo" secondAttribute="bottom" constant="8" id="lzd-3J-elA"/>
-                            <constraint firstItem="fl4-wZ-EBn" firstAttribute="top" secondItem="AKf-5Z-H5B" secondAttribute="bottom" constant="86" id="tnJ-aW-AOB"/>
+                            <constraint firstItem="fl4-wZ-EBn" firstAttribute="top" secondItem="AKf-5Z-H5B" secondAttribute="bottom" constant="83" id="tnJ-aW-AOB"/>
                             <constraint firstItem="y1l-8H-jKo" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="22" id="u9I-rX-Ogg"/>
-                            <constraint firstItem="AKf-5Z-H5B" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="85" id="vSC-Ab-pga"/>
+                            <constraint firstItem="AKf-5Z-H5B" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="41" id="vSC-Ab-pga"/>
+                            <constraint firstItem="7ph-JN-ID9" firstAttribute="top" secondItem="fl4-wZ-EBn" secondAttribute="bottom" constant="8" symbolic="YES" id="wcX-Cu-pPe"/>
                             <constraint firstItem="I6s-UG-Ojq" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="41" id="xAO-tA-wpT"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="draggableView" destination="I6s-UG-Ojq" id="fn6-S2-9sP"/>
                         <outlet property="openDirectoryButton" destination="AKf-5Z-H5B" id="cIF-DY-ak4"/>
+                        <outlet property="openDirectoryPath" destination="wGA-ax-PdW" id="TxZ-gB-pfI"/>
                         <outlet property="saveDirectoryButton" destination="fl4-wZ-EBn" id="fnv-0F-izi"/>
+                        <outlet property="saveDirectoryPath" destination="7ph-JN-ID9" id="clb-QS-7N2"/>
+                        <outlet property="sortFileButton" destination="ALD-hz-bTO" id="JmI-C5-R2D"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="655"/>
+            <point key="canvasLocation" x="74.5" y="655"/>
         </scene>
     </scenes>
 </document>
