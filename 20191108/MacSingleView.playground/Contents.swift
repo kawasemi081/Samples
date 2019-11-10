@@ -19,14 +19,10 @@ The best strategy for ensuring that things work across each of the various permu
 
 func copyFile(filenames: [String], atPath: String, toPath: String) {
     let fileManager = FileManager.default
-    let filename = "/Users/midori/workspace/Samples/20191108/MacSingleView.playground/Resources/demo.csv"
+    guard let filename = Bundle.main.path(forResource: "demo", ofType: "csv") else { return }
     let csvURL = URL(fileURLWithPath: filename)
     
     do {
-        /// 大量データを読み込む方法を調べたらこんなOSSがあって、中身を読んでたらじ結構大変そうな感じだった。
-        ///  https://github.com/yaslab/CSV.swift
-        /// - SeeAlso: https://stackoverflow.com/questions/24152597/how-do-i-open-a-file-in-swift
-        /// 大量のデータを読み込むのが問題なのであれば、MLDataTable使えば楽なのかもなと試してみる
         var parsingOptions = MLDataTable.ParsingOptions()
         parsingOptions.skipRows = 0
         parsingOptions.containsHeader = false
@@ -36,6 +32,8 @@ func copyFile(filenames: [String], atPath: String, toPath: String) {
         
         dataTable.rows.forEach {
             let csvLine = $0.values.compactMap { $0.stringValue }
+            guard !csvLine[0].isEmpty && !csvLine[1].isEmpty,
+                 filenames.firstIndex(where: { $0 == csvLine[0] }) != nil else { return }
             do {
                 let savePath = "\(toPath)/\(csvLine[1])"
                 let url = URL(fileURLWithPath: savePath)
@@ -49,7 +47,6 @@ func copyFile(filenames: [String], atPath: String, toPath: String) {
             }
         }
         
-        /// https://github.com/yaslab/CSV.swift
     } catch {
         print("⭐️: \(error)")
     }
@@ -94,32 +91,6 @@ func openPanel() {
 
 openPanel()
 
-/// playgroundのこの書き方ではDrag&Dropできない
-class DraggableView: NSView {
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        registerForDraggedTypes([.fileURL])
-    }
-    
-    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        return NSDragOperation.copy
-    }
-    
-    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        // 画像をドラッグ＆ドロップで読み込む例
-        let pboard = sender.draggingPasteboard
-        
-        if let urls = pboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL] {
-            for url in urls {
-                print(url)
-                // 何らかの処理
-            }
-        }
-        return true
-    }
-
-}
 
 //-----
 
