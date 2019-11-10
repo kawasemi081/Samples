@@ -8,6 +8,7 @@
 
 import Cocoa
 
+
 class ViewController: NSViewController {
 
     @IBOutlet weak var openDirectoryButton: NSButton!
@@ -18,6 +19,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var openDirectoryPath: NSTextField!
     @IBOutlet weak var saveDirectoryPath: NSTextField!
     
+    @IBOutlet weak var message: NSTextField!
     private var atPath: URL?
     
     override func viewDidLoad() {
@@ -53,47 +55,54 @@ class ViewController: NSViewController {
     }
     
     @IBAction func sortFiles(_ sender: Any) {
-        guard !draggableView.csvFilePath.isEmpty, let atPath = self.atPath, !saveDirectoryPath.stringValue.isEmpty else { return }
+        guard !draggableView.csvFilePath.isEmpty, let atPath = self.atPath, !saveDirectoryPath.stringValue.isEmpty else {
+            message.stringValue = draggableView.csvFilePath.isEmpty ? "csvファイルを入れてください" : "フォルダを指定してください"
+            return
+        }
         
         do {
             let csvString = try String(contentsOfFile: draggableView.csvFilePath, encoding: String.Encoding.utf8)
             let csvLines = csvString.components(separatedBy: .newlines)
-
+            message.stringValue = "分類を開始"
             sort(csvLines: csvLines, atPath: atPath, toPath: saveDirectoryPath.stringValue)
         } catch {
             print(error)
         }
 
     }
-}
-
-let fileManager = FileManager.default
-private func sort(csvLines: [String], atPath: URL, toPath: String) {
-    do {
-        let contents = try fileManager.contentsOfDirectory(at: atPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
-        
-        csvLines.compactMap { $0.components(separatedBy: ",") }
-            .forEach { items in
-                guard !items[0].isEmpty && !items[1].isEmpty,
-                    let url = contents.first(where: { $0.lastPathComponent == items[0] }) else { return }
-                
-                let savePath = toPath + "/" + String(items[1])
-                let toPath = URL(fileURLWithPath: savePath)
-                copyItem(atPath: url, directoryUrl: toPath)
+    
+    let fileManager = FileManager.default
+    private func sort(csvLines: [String], atPath: URL, toPath: String) {
+        do {
+            let contents = try fileManager.contentsOfDirectory(at: atPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
+            
+            csvLines.compactMap { $0.components(separatedBy: ",") }
+                .forEach { items in
+                    guard !items[0].isEmpty && !items[1].isEmpty,
+                        let url = contents.first(where: { $0.lastPathComponent == items[0] }) else { return }
+                    
+                    let savePath = toPath + "/" + String(items[1])
+                    let toPath = URL(fileURLWithPath: savePath)
+                    copyItem(atPath: url, directoryUrl: toPath)
+            }
+            message.stringValue = "分類完了"
+  
+        } catch  {
+            print("⭐️: \(error)")
+            message.stringValue = "コンソールログを確認してください"
         }
-
-    } catch  {
-        print("⭐️: \(error)")
     }
-}
 
-private func copyItem(atPath: URL, directoryUrl: URL) {
-    do {
-        try fileManager.createDirectory(at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
+    private func copyItem(atPath: URL, directoryUrl: URL) {
+        do {
+            try fileManager.createDirectory(at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
 
-        let toPath = directoryUrl.path + "/" + atPath.lastPathComponent
-        try fileManager.copyItem(atPath: atPath.path, toPath: toPath)
-    } catch  {
-        print("⭐️: \(error)")
+            let toPath = directoryUrl.path + "/" + atPath.lastPathComponent
+            try fileManager.copyItem(atPath: atPath.path, toPath: toPath)
+        } catch  {
+            print("⭐️: \(error)")
+            message.stringValue = "コンソールログを確認してください"
+        }
     }
+
 }
