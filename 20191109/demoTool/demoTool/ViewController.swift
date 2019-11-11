@@ -30,6 +30,8 @@ class ViewController: NSViewController {
     }
 
     @IBAction func tappedOpenDirectoryButton(_ sender: Any) {
+        /// - Note: MacAppだけ使えるクラス
+        /// NSSavePanelよりは設定できるpropertyが多い
         let openPanel = NSOpenPanel()
         openPanel.canChooseDirectories = true
         openPanel.canCreateDirectories = false
@@ -43,13 +45,18 @@ class ViewController: NSViewController {
     }
     
     @IBAction func tappedSaveDirectoryButton(_ sender: Any) {
+        /// - Note: MacAppだけ使えるクラス。
+        /// フォルダに書き込みがしたいときはこれを使うのとセットで`Target > Capabilityies`でread&writeを指定する
+        /// セットし忘れてもちゃんとwarningが出てくれるから初心者でも分かりやすかった
+        /// PDFにある`runModal()`メソッドとして使うなら、どのUIボタンが相性が良いのかが分からなかった
+        /// MacAppはボタンの種類が多くてちょっと悩ましいなと思う
         let savePanel = NSSavePanel()
         savePanel.canCreateDirectories = false
         savePanel.showsTagField = false
         savePanel.message = "保存先フォルダを入力"
         savePanel.begin { (result) -> Void in
             guard result.rawValue == NSApplication.ModalResponse.OK.rawValue, let toPath = savePanel.url else { return }
-    
+            /// - Note: NSTextFieldとかラベル系はiOSなら`label.text = ""`って書くのが当たり前だけど、macAppは`label.stringValue = ""`と書く
             self.saveDirectoryPath.stringValue = toPath.path
         }
     }
@@ -74,6 +81,8 @@ class ViewController: NSViewController {
     let fileManager = FileManager.default
     private func sort(csvLines: [String], atPath: URL, toPath: String) {
         do {
+            /// - Note: 右ペインのDocsをみたら`contentsOfDirectory(at:)`は iOSとMacOSとMac Catalystをサポートしていた
+            /// (メソッドにはあまり関係ないけれど) MacOSとMac Catalystが分けて書かれていたので、来年からのAPIは役割が分化していくのかなと少し気になった
             let contents = try fileManager.contentsOfDirectory(at: atPath, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])
             
             csvLines.compactMap { $0.components(separatedBy: ",") }
