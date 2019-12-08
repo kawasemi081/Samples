@@ -1,0 +1,4 @@
+NSTouchBarProvider is A protocol that an object adopts to create a bar object in your app.
+CoreMotionサンプルをSwiftUIで作る
+音声読み上げのサンプル作る
+preview windowの説明ができるように色々な記事を読む
