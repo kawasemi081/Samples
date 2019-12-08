@@ -13,10 +13,6 @@ extension NSTouchBar.CustomizationIdentifier {
 }
 
 extension NSTouchBarItem.Identifier {
-    static let scrubberPopover = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.scrubberPopover")
     static let button = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.button")
-    static let dismissButton = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.dismissButton")
-    static let slider = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.slider")
-//    static let label = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.label")
 }
 

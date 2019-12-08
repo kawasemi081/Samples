@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="mac" appearance="light"/>
+    <device id="ipad9_7" orientation="portrait" layout="fullscreen" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -12,15 +12,48 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TouchBarCustmising" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="TouchBarには各メモの最初の5文字が表示されてます。tapすると全文が表示されます。" translatesAutoresizingMaskIntoConstraints="NO" id="TpM-RP-10V">
+                                <rect key="frame" x="123" y="487" width="522" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="522" id="Sg5-cM-NaO"/>
+                                    <constraint firstAttribute="height" constant="50" id="doh-2v-acf"/>
+                                </constraints>
+                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="ToolBar &gt; View &gt; Customize Touch Barを選択すると表示するメモのカスタマイズが可能です。" translatesAutoresizingMaskIntoConstraints="NO" id="02v-wd-Rn2">
+                                <rect key="frame" x="123" y="545" width="522" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="522" id="7TR-GN-Ehq"/>
+                                    <constraint firstAttribute="height" constant="50" id="OOi-ZM-vz8"/>
+                                </constraints>
+                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="TpM-RP-10V" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="88O-Tm-tk3"/>
+                            <constraint firstItem="TpM-RP-10V" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="AQ4-gj-CqS"/>
+                            <constraint firstItem="02v-wd-Rn2" firstAttribute="width" secondItem="TpM-RP-10V" secondAttribute="width" id="a0W-Po-lgH"/>
+                            <constraint firstItem="02v-wd-Rn2" firstAttribute="trailing" secondItem="TpM-RP-10V" secondAttribute="trailing" id="gZH-7F-FsO"/>
+                            <constraint firstItem="02v-wd-Rn2" firstAttribute="leading" secondItem="TpM-RP-10V" secondAttribute="leading" id="h94-3W-Daz"/>
+                            <constraint firstItem="02v-wd-Rn2" firstAttribute="height" secondItem="TpM-RP-10V" secondAttribute="height" id="lVt-gL-UHO"/>
+                            <constraint firstItem="02v-wd-Rn2" firstAttribute="top" secondItem="TpM-RP-10V" secondAttribute="bottom" constant="8" id="n8Y-M6-CIa"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="130"/>
+            <point key="canvasLocation" x="138.28125" y="129.4921875"/>
         </scene>
     </scenes>
 </document>
