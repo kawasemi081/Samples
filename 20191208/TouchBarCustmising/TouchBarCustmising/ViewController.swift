@@ -19,8 +19,31 @@ class ViewController: UIViewController {
     }
 
     override func makeTouchBar() -> NSTouchBar? {
+        return makeButtonItems()
+    }
+    
+    private func makeButtonItems() -> NSTouchBar {
         let touchBar = NSTouchBar()
-        touchBar.customizationIdentifier = .popoverBar
+        touchBar.customizationIdentifier = .customViewBar
+        
+        memos?.filter { !$0.isEmpty }
+            .enumerated().forEach { (offset: Int, element: String) in
+                let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.button" + String(offset))
+                let buttonItem = NSButtonTouchBarItem(identifier: identifier, title: element, target: self, action: #selector(PopoverTouchBarSample.actionHandler(_:)))
+                buttonItem.customizationLabel = NSLocalizedString("メモ\(offset+1)", comment:"")
+                
+                touchBar.defaultItemIdentifiers.append(identifier)
+                touchBar.customizationAllowedItemIdentifiers.append(identifier)
+                touchBar.templateItems.insert(buttonItem)
+        }
+        
+        return touchBar
+    }
+
+    private func makePopoverItems() -> NSTouchBar {
+        let touchBar = NSTouchBar()
+        touchBar.customizationIdentifier = .customViewBar
+        
         memos?.filter { !$0.isEmpty }
             .enumerated().forEach { (offset: Int, element: String) in
                 let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.scrubberPopover" + String(offset))
@@ -33,8 +56,9 @@ class ViewController: UIViewController {
                 touchBar.defaultItemIdentifiers.append(identifier)
                 touchBar.customizationAllowedItemIdentifiers.append(identifier)
                 touchBar.templateItems.insert(popoverItem)
+                
         }
-
+        
         return touchBar
     }
 

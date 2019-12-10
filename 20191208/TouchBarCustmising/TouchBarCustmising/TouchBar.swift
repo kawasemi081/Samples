@@ -10,6 +10,7 @@ import AppKit
 
 extension NSTouchBar.CustomizationIdentifier {
     static let popoverBar = NSTouchBar.CustomizationIdentifier("com.TouchBarCatalog.popoverBar")
+    static let customViewBar = NSTouchBar.CustomizationIdentifier("com.TouchBarCatalog.customViewBar")
 }
 
 extension NSTouchBarItem.Identifier {
