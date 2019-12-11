@@ -40,7 +40,7 @@ class PopoverTouchBarSample: NSTouchBar {
 
 /**
  - Important:
- Mac Catalystでは、NSCustomTouchBarItemとNSScrubber、NSSliderTouchBarItemは使えない❌
+ Mac Catalystでは、NSCustomTouchBarItemとNSScrubberは使えない❌
  NSScrubberDelegateもサポート対象外❌
  */
 extension PopoverTouchBarSample: NSTouchBarDelegate {

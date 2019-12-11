@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,8 +14,8 @@
 		076FE9AF239AA43A00A3751A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 076FE9AE239AA43A00A3751A /* Assets.xcassets */; };
 		076FE9B2239AA43A00A3751A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 076FE9B0239AA43A00A3751A /* LaunchScreen.storyboard */; };
 		076FE9BB239C67EA00A3751A /* memo.txt in Resources */ = {isa = PBXBuildFile; fileRef = 076FE9BA239C67EA00A3751A /* memo.txt */; };
-		076FE9BD239C7E4500A3751A /* CustomizedTouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076FE9BC239C7E4500A3751A /* CustomizedTouchBar.swift */; };
-		076FE9BF239C849A00A3751A /* TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076FE9BE239C849A00A3751A /* TouchBar.swift */; };
+		076FE9BD239C7E4500A3751A /* CustomizedTouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076FE9BC239C7E4500A3751A /* CustomizedTouchBar.swift */; platformFilter = maccatalyst; };
+		076FE9BF239C849A00A3751A /* TouchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 076FE9BE239C849A00A3751A /* TouchBar.swift */; platformFilter = maccatalyst; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */

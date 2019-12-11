@@ -7,26 +7,60 @@
 //
 
 import UIKit
-import AppKit
 
-class ViewController: UIViewController {
+let path = Bundle.main.path(forResource: "memo", ofType: "txt")!
+
+class ViewController: UIViewController, UIDocumentPickerDelegate {
     
-    var memos: [String]? = loadText()
+    @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var textView: UITextView!
+    
+    var todoList: [String]? = loadText(from: path) {
+        didSet {
+            textView.text = todoList?.joined(separator: "\n")
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        textView.text = todoList?.joined(separator: "\n")
+        let controller = UIDocumentPickerViewController.init(documentTypes: ["public.txt"], in: .open)
+        controller.delegate = self;
+        controller.allowsMultipleSelection = false;
+        self.present(controller, animated: true, completion: nil)
     }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        guard let newList = loadText(from: url.path) else { return }
+        
+        self.todoList = newList
+    }
+    
+    @IBAction func saveTodoList(_ sender: Any) {
+        let result = save(text: textView.text)
+        print("result is \(result)")
+        /// - Note: `ViewController.makeTouchBar()`を呼びたいけれど呼べない
+    }
+}
+
+
+
+#if targetEnvironment(macCatalyst)
+import AppKit
+/// - Note:ビルドターゲットをiPadにするとエラーになるので`TouchBar.swift`のように別ファイルにして
+/// 　　　　CompireSourcesのplatformをmacOSにしてしまう方が可読性という点では良いかも。
+extension ViewController {
 
     override func makeTouchBar() -> NSTouchBar? {
         return makeButtonItems()
     }
-    
+
     private func makeButtonItems() -> NSTouchBar {
         let touchBar = NSTouchBar()
         touchBar.customizationIdentifier = .customViewBar
         
-        memos?.filter { !$0.isEmpty }
+        todoList?.filter { !$0.isEmpty }
             .enumerated().forEach { (offset: Int, element: String) in
                 let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.button" + String(offset))
                 let buttonItem = NSButtonTouchBarItem(identifier: identifier, title: element, target: self, action: #selector(PopoverTouchBarSample.actionHandler(_:)))
@@ -44,7 +78,7 @@ class ViewController: UIViewController {
         let touchBar = NSTouchBar()
         touchBar.customizationIdentifier = .customViewBar
         
-        memos?.filter { !$0.isEmpty }
+        todoList?.filter { !$0.isEmpty }
             .enumerated().forEach { (offset: Int, element: String) in
                 let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.scrubberPopover" + String(offset))
                 let popoverItem = NSPopoverTouchBarItem(identifier: identifier)
@@ -63,13 +97,25 @@ class ViewController: UIViewController {
     }
 
 }
+#endif
 
-private func loadText() -> [String]? {
-    guard let path = Bundle.main.path(forResource: "memo", ofType: "txt") else { return nil }
+private func loadText(from path: String?) -> [String]? {
+    guard let path = path  else { return nil }
+
     do {
         let content = try String(contentsOfFile: path, encoding: .utf8)
         return content.components(separatedBy: "\n")
     } catch {
         return nil
+    }
+}
+
+private func save(text: String) -> Bool {    
+    do {
+        let url = URL(fileURLWithPath: path)
+        try text.write(to: url, atomically: false, encoding: .utf8)
+        return true
+    } catch {
+        return false
     }
 }

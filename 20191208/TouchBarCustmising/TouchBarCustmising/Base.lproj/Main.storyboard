@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="ipad9_7" orientation="portrait" layout="fullscreen" appearance="light"/>
+    <device id="mac" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -12,48 +12,72 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TouchBarCustmising" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="TouchBarには各メモの最初の5文字が表示されてます。tapすると全文が表示されます。" translatesAutoresizingMaskIntoConstraints="NO" id="TpM-RP-10V">
-                                <rect key="frame" x="123" y="487" width="522" height="50"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TpM-RP-10V">
+                                <rect key="frame" x="139" y="167" width="539" height="282"/>
+                                <color key="backgroundColor" red="0.83438516044746669" green="0.89113487737612473" blue="0.96130555868148804" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="522" id="Sg5-cM-NaO"/>
-                                    <constraint firstAttribute="height" constant="50" id="doh-2v-acf"/>
+                                    <constraint firstAttribute="width" constant="539" id="Sg5-cM-NaO"/>
+                                    <constraint firstAttribute="height" constant="282" id="doh-2v-acf"/>
                                 </constraints>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="ToolBar &gt; View &gt; Customize Touch Barを選択すると表示するメモのカスタマイズが可能です。" translatesAutoresizingMaskIntoConstraints="NO" id="02v-wd-Rn2">
-                                <rect key="frame" x="123" y="545" width="522" height="50"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="02v-wd-Rn2">
+                                <rect key="frame" x="139" y="457" width="539" height="100"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="522" id="7TR-GN-Ehq"/>
-                                    <constraint firstAttribute="height" constant="50" id="OOi-ZM-vz8"/>
+                                    <constraint firstAttribute="width" constant="539" id="7TR-GN-Ehq"/>
+                                    <constraint firstAttribute="height" constant="100" id="OOi-ZM-vz8"/>
                                 </constraints>
-                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="青いエリアにファイルをドロップできるようにしました。また、ToolBar &gt; View &gt; Customize Touch Barを選択すると表示するメモのカスタマイズが可能です。">
+                                        <attributes>
+                                            <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <font key="NSFont" size="14" name="HiraginoSans-W3"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Yr-BJ-qZ9">
+                                <rect key="frame" x="139" y="119" width="122" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="KIV-Uf-GZV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="ローカルに保存"/>
+                                <connections>
+                                    <action selector="saveTodoList:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BVu-tx-QWQ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="TpM-RP-10V" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="88O-Tm-tk3"/>
-                            <constraint firstItem="TpM-RP-10V" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="AQ4-gj-CqS"/>
+                            <constraint firstItem="TpM-RP-10V" firstAttribute="top" secondItem="0Yr-BJ-qZ9" secondAttribute="bottom" constant="8" id="4Ye-Le-aHi"/>
+                            <constraint firstItem="TpM-RP-10V" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" constant="8.5" id="88O-Tm-tk3"/>
+                            <constraint firstItem="TpM-RP-10V" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="8" id="AQ4-gj-CqS"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0Yr-BJ-qZ9" secondAttribute="trailing" symbolic="YES" id="IFg-mz-LMB"/>
                             <constraint firstItem="02v-wd-Rn2" firstAttribute="width" secondItem="TpM-RP-10V" secondAttribute="width" id="a0W-Po-lgH"/>
+                            <constraint firstItem="TpM-RP-10V" firstAttribute="leading" secondItem="0Yr-BJ-qZ9" secondAttribute="leading" id="dbW-1E-643"/>
                             <constraint firstItem="02v-wd-Rn2" firstAttribute="trailing" secondItem="TpM-RP-10V" secondAttribute="trailing" id="gZH-7F-FsO"/>
                             <constraint firstItem="02v-wd-Rn2" firstAttribute="leading" secondItem="TpM-RP-10V" secondAttribute="leading" id="h94-3W-Daz"/>
-                            <constraint firstItem="02v-wd-Rn2" firstAttribute="height" secondItem="TpM-RP-10V" secondAttribute="height" id="lVt-gL-UHO"/>
                             <constraint firstItem="02v-wd-Rn2" firstAttribute="top" secondItem="TpM-RP-10V" secondAttribute="bottom" constant="8" id="n8Y-M6-CIa"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="saveButton" destination="0Yr-BJ-qZ9" id="Uj3-f2-9ay"/>
+                        <outlet property="textView" destination="TpM-RP-10V" id="Cba-bS-Vs3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="138.28125" y="129.4921875"/>
+            <point key="canvasLocation" x="138" y="129"/>
         </scene>
     </scenes>
 </document>

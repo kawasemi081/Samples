@@ -7,8 +7,9 @@
 //
 
 import UIKit
+#if targetEnvironment(macCatalyst)
 import AppKit
-
+#endif
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
