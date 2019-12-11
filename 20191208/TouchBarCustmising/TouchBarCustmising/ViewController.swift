@@ -15,16 +15,17 @@ class ViewController: UIViewController, UIDocumentPickerDelegate {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var textView: UITextView!
     
-    var todoList: [String]? = loadText(from: path) {
+    var increment: Int = 0
+    var todoList: [String] = loadText(from: path) {
         didSet {
-            textView.text = todoList?.joined(separator: "\n")
+            textView.text = todoList.joined(separator: "\n")
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        textView.text = todoList?.joined(separator: "\n")
+        textView.text = todoList.joined(separator: "\n")
         let controller = UIDocumentPickerViewController.init(documentTypes: ["public.txt"], in: .open)
         controller.delegate = self;
         controller.allowsMultipleSelection = false;
@@ -32,7 +33,8 @@ class ViewController: UIViewController, UIDocumentPickerDelegate {
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        guard let newList = loadText(from: url.path) else { return }
+        let newList = loadText(from: url.path)
+        guard newList.count > 0 else { return }
         
         self.todoList = newList
     }
@@ -60,16 +62,13 @@ extension ViewController {
         let touchBar = NSTouchBar()
         touchBar.customizationIdentifier = .customViewBar
         
-        todoList?.filter { !$0.isEmpty }
-            .enumerated().forEach { (offset: Int, element: String) in
-                let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.button" + String(offset))
-                let buttonItem = NSButtonTouchBarItem(identifier: identifier, title: element, target: self, action: #selector(PopoverTouchBarSample.actionHandler(_:)))
-                buttonItem.customizationLabel = NSLocalizedString("メモ\(offset+1)", comment:"")
-                
-                touchBar.defaultItemIdentifiers.append(identifier)
-                touchBar.customizationAllowedItemIdentifiers.append(identifier)
-                touchBar.templateItems.insert(buttonItem)
-        }
+        let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.button")
+        let buttonItem = NSButtonTouchBarItem(identifier: identifier, title: todoList[increment], target: self, action: #selector(self.touchHandler(_:)))
+        buttonItem.customizationLabel = NSLocalizedString("メモ", comment:"")
+        
+        touchBar.defaultItemIdentifiers.append(identifier)
+        touchBar.customizationAllowedItemIdentifiers.append(identifier)
+        touchBar.templateItems.insert(buttonItem)
         
         return touchBar
     }
@@ -78,7 +77,7 @@ extension ViewController {
         let touchBar = NSTouchBar()
         touchBar.customizationIdentifier = .customViewBar
         
-        todoList?.filter { !$0.isEmpty }
+        todoList.filter { !$0.isEmpty }
             .enumerated().forEach { (offset: Int, element: String) in
                 let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.scrubberPopover" + String(offset))
                 let popoverItem = NSPopoverTouchBarItem(identifier: identifier)
@@ -96,17 +95,29 @@ extension ViewController {
         return touchBar
     }
 
+    @objc func touchHandler(_ sender: Any?) {
+        print("\(#function) is called")
+        guard let buttonItem = sender as? NSButtonTouchBarItem else { return }
+        
+        if increment + 1 < todoList.count {
+            increment += 1
+        } else {
+            increment = 0
+        }
+
+        buttonItem.title = todoList[increment]
+    }
 }
 #endif
 
-private func loadText(from path: String?) -> [String]? {
-    guard let path = path  else { return nil }
+private func loadText(from path: String?) -> [String] {
+    guard let path = path  else { return [] }
 
     do {
         let content = try String(contentsOfFile: path, encoding: .utf8)
-        return content.components(separatedBy: "\n")
+        return content.components(separatedBy: "\n").filter { !$0.isEmpty }
     } catch {
-        return nil
+        return []
     }
 }
 
