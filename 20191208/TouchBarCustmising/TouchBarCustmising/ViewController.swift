@@ -8,15 +8,13 @@
 
 import UIKit
 
-let path = Bundle.main.path(forResource: "memo", ofType: "txt")!
-
 class ViewController: UIViewController, UIDocumentPickerDelegate {
     
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var textView: UITextView!
     
     var increment: Int = 0
-    var todoList: [String] = loadText(from: path) {
+    var todoList: [String] = loadText() {
         didSet {
             textView.text = todoList.joined(separator: "\n")
         }
@@ -31,18 +29,24 @@ class ViewController: UIViewController, UIDocumentPickerDelegate {
         controller.allowsMultipleSelection = false;
         self.present(controller, animated: true, completion: nil)
     }
-    
+
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
-        let newList = loadText(from: url.path)
-        guard newList.count > 0 else { return }
-        
-        self.todoList = newList
+        do {
+            let content = try String(contentsOfFile: url.path, encoding: .utf8)
+            let newList = content.components(separatedBy: "\n").filter { !$0.isEmpty }
+            guard newList.count > 0 else { return }
+
+            self.todoList = newList
+            self.increment = 0
+            /// - Note: `ViewController.makeTouchBar()`を呼びたいけれど呼べない
+        } catch {
+            print("Oops! faild to read")
+        }
     }
     
     @IBAction func saveTodoList(_ sender: Any) {
-        let result = save(text: textView.text)
-        print("result is \(result)")
-        /// - Note: `ViewController.makeTouchBar()`を呼びたいけれど呼べない
+        let todoList = textView.text.components(separatedBy: "\n").filter { !$0.isEmpty }
+        save(todoList: todoList)
     }
 }
 
@@ -107,26 +111,16 @@ extension ViewController {
 
         buttonItem.title = todoList[increment]
     }
+
 }
 #endif
 
-private func loadText(from path: String?) -> [String] {
-    guard let path = path  else { return [] }
-
-    do {
-        let content = try String(contentsOfFile: path, encoding: .utf8)
-        return content.components(separatedBy: "\n").filter { !$0.isEmpty }
-    } catch {
-        return []
-    }
+let userDefaults = UserDefaults.standard
+private func loadText() -> [String] {
+    guard let todoList = userDefaults.stringArray(forKey: "TodoList")  else { return [] }
+    return todoList.filter { !$0.isEmpty }
 }
 
-private func save(text: String) -> Bool {    
-    do {
-        let url = URL(fileURLWithPath: path)
-        try text.write(to: url, atomically: false, encoding: .utf8)
-        return true
-    } catch {
-        return false
-    }
+private func save(todoList: [String]) {
+    userDefaults.set(todoList, forKey: "TodoList")
 }
