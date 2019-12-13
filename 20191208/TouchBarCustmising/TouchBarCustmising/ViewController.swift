@@ -65,6 +65,7 @@ extension ViewController {
     private func makeButtonItems() -> NSTouchBar {
         let touchBar = NSTouchBar()
         touchBar.customizationIdentifier = .customViewBar
+        guard todoList.count > 0 else { return touchBar }
         
         let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.button")
         let buttonItem = NSButtonTouchBarItem(identifier: identifier, title: todoList[increment], target: self, action: #selector(self.touchHandler(_:)))
