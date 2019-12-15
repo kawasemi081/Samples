@@ -45,7 +45,7 @@ class ViewController: UIViewController, UIDocumentPickerDelegate {
     }
     
     @IBAction func saveTodoList(_ sender: Any) {
-        let todoList = textView.text.components(separatedBy: "\n").filter { !$0.isEmpty }
+        todoList = textView.text.components(separatedBy: "\n").filter { !$0.isEmpty }
         save(todoList: todoList)
     }
 }
@@ -65,10 +65,9 @@ extension ViewController {
     private func makeButtonItems() -> NSTouchBar {
         let touchBar = NSTouchBar()
         touchBar.customizationIdentifier = .customViewBar
-        guard todoList.count > 0 else { return touchBar }
-        
+        let title = todoList.count > 0 ? todoList[increment] : "メモ"
         let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.button")
-        let buttonItem = NSButtonTouchBarItem(identifier: identifier, title: todoList[increment], target: self, action: #selector(self.touchHandler(_:)))
+        let buttonItem = NSButtonTouchBarItem(identifier: identifier, title: title, target: self, action: #selector(self.touchHandler(_:)))
         buttonItem.customizationLabel = NSLocalizedString("メモ", comment:"")
         
         touchBar.defaultItemIdentifiers.append(identifier)
@@ -78,38 +77,19 @@ extension ViewController {
         return touchBar
     }
 
-    private func makePopoverItems() -> NSTouchBar {
-        let touchBar = NSTouchBar()
-        touchBar.customizationIdentifier = .customViewBar
-        
-        todoList.filter { !$0.isEmpty }
-            .enumerated().forEach { (offset: Int, element: String) in
-                let identifier = NSTouchBarItem.Identifier("com.TouchBarCatalog.TouchBarItem.scrubberPopover" + String(offset))
-                let popoverItem = NSPopoverTouchBarItem(identifier: identifier)
-                /// - Note: ToolBar > View > Customize Touch Bar で"Open Popover"アイテムのラベルとして表示する文字列
-                popoverItem.customizationLabel = NSLocalizedString("メモ\(offset+1)", comment:"")
-                popoverItem.collapsedRepresentationLabel = NSLocalizedString(String(element.prefix(5)), comment:"")
-                
-                popoverItem.popoverTouchBar = PopoverTouchBarSample(memo: element, presentingItem: popoverItem)
-                touchBar.defaultItemIdentifiers.append(identifier)
-                touchBar.customizationAllowedItemIdentifiers.append(identifier)
-                touchBar.templateItems.insert(popoverItem)
-                
-        }
-        
-        return touchBar
-    }
-
     @objc func touchHandler(_ sender: Any?) {
-        print("\(#function) is called")
         guard let buttonItem = sender as? NSButtonTouchBarItem else { return }
-        
+        if todoList.count == 0 {
+            buttonItem.title = "メモ"
+            return
+        }
+
         if increment + 1 < todoList.count {
             increment += 1
         } else {
             increment = 0
         }
-
+        
         buttonItem.title = todoList[increment]
     }
 
